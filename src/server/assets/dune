@@ -1,0 +1,6 @@
+(rule
+ (alias default)
+ (deps ../../client/index.bc.js)
+ (targets index.js)
+ (action
+  (copy %{deps} %{targets})))

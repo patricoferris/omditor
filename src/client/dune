@@ -1,0 +1,19 @@
+(executable
+ (name index)
+ (modes js)
+ (libraries
+  js_of_ocaml
+  js_of_ocaml-lwt
+  brr
+  omd
+  brr.note
+  digestif.ocaml
+  checkseum.ocaml
+  git-cohttp
+  cohttp-lwt-jsoo
+  unix
+  irmin
+  irmin.mem
+  irmin-http
+  irmin-indexeddb
+  irmin-git))

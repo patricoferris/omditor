@@ -1,0 +1,7 @@
+[submodule "irmin-indexeddb"]
+	path = irmin-indexeddb
+	url = https://github.com/patricoferris/irmin-indexeddb
+	branch = irmin.2.7
+[submodule "irmin"]
+	path = irmin
+	url = https://github.com/patricoferris/irmin.git

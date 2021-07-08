@@ -1,0 +1,17 @@
+(executable
+ (name main)
+ (libraries dream irmin-unix))
+
+(rule
+ (targets assets.ml)
+ (deps ./assets/index.js)
+ (action
+  (with-stdout-to
+   %{null}
+   (run %{bin:ocaml-crunch} -e js -m plain ./assets -o %{targets}))))
+
+(rule
+ (targets html.ml)
+ (deps html.eml)
+ (action
+  (run dream_eml %{deps} --workspace %{workspace_root})))
