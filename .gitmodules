@@ -5,3 +5,7 @@
 [submodule "irmin"]
 	path = irmin
 	url = https://github.com/patricoferris/irmin.git
+[submodule "repr"]
+	path = repr
+	url = https://github.com/patricoferris/repr.git
+	branch = quadruples
