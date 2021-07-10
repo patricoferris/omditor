@@ -41,18 +41,26 @@ let local_commit t k v =
 
 let local_get t k = Store.get t.staging k
 
+[@@@part "4"]
 let sync ?(merge = true) t =
-  ignore merge;
   let config = Irmin_http.config t.uri in
   let main = t.main in
   Remote.Repo.v config >>= fun repo ->
   Remote.master repo >>= fun remote ->
   Sync.pull_exn main ~depth:1 (Irmin.remote_store (module Remote) remote) `Set
   >>= fun _ ->
-  if merge then
-    Store.merge_into ~info:(info "update staging") ~into:t.staging main
+  if merge then (
+    Brr.Console.log [ Jstr.v "Merging" ];
+    Store.merge_into ~info:(info "update staging") ~into:t.staging main >>= function
+      | Ok () -> Lwt.return @@ Ok ()
+      | Error (`Conflict s) -> 
+        (* Of course in practice we'd be more clever here... *)
+        Store.Head.get main >>= fun head -> 
+        Lwt_result.ok @@ Store.Branch.set (Store.repo t.staging) "staging" head
+  )
   else Lwt_result.return ()
 
+[@@@part "5"]
 (* We're only using a one-level hierarchy so this is sufficient *)
 let list t =
   Store.list t.staging [] >>= fun lst -> Lwt.return @@ List.map fst lst
@@ -61,7 +69,7 @@ let push ?(message = "merge") t =
   let config = Irmin_http.config t.uri in
   Remote.Repo.v config >>= fun repo ->
   Remote.master repo >>= fun remote ->
-  sync t >>= fun _ ->
+  sync ~merge:false t >>= fun _ ->
   let main = t.main in
   Store.merge_into ~info:(info message) ~into:main t.staging >>= fun _ ->
   Sync.push_exn main (Irmin.remote_store (module Remote) remote)

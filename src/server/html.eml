@@ -28,7 +28,7 @@ let html =
         div.text-editor {
           font-family: 'Courier New', Courier, monospace;
           height: 100%;
-          min-height: 90vh;
+          min-height: 80vh;
           width: 45%;
           border: solid;
           border-width: 1px;
