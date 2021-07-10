@@ -33,7 +33,7 @@ let update (b, s) t =
 
 let commit s t =
   Lwt_js_events.async (fun () ->
-      Store.local_commit s [ t.file ] (t.editor |> Jstr.to_string));
+      Store.local_commit s [ t.file ] (t.editor |> Jstr.to_string |> Omd.of_string));
   t
 
 let sync store t =

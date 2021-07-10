@@ -15,7 +15,7 @@ module Store =
   Irmin_git.Generic
     (Irmin_indexeddb.Content_store)
     (Irmin_indexeddb.Branch_store)
-    (Irmin.Contents.String)
+    (Omd_repr)
     (Irmin.Path.String_list)
     (Irmin.Branch.String)
 

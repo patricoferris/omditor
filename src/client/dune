@@ -6,6 +6,7 @@
   js_of_ocaml-lwt
   brr
   omd
+  omd_repr
   brr.note
   digestif.ocaml
   checkseum.ocaml

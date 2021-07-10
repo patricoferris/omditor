@@ -1,6 +1,6 @@
 (executable
  (name main)
- (libraries dream irmin-unix))
+ (libraries dream omd_repr irmin-unix))
 
 (rule
  (targets assets.ml)

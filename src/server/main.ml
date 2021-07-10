@@ -6,7 +6,7 @@ let info = Irmin_unix.info
 
 [@@@part "0"]
 
-module Store = Irmin_unix.Git.FS.KV (Irmin.Contents.String)
+module Store = Irmin_unix.Git.FS.KV (Omd_repr)
 module Sync = Irmin.Sync (Store)
 module Http = Irmin_http.Server (Cohttp_lwt_unix.Server) (Store)
 
