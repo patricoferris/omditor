@@ -2,9 +2,10 @@
 
 *Status: WIP & Experimental & PoC*
 
-Omditor is an incredibly simple markdown editor that uses [Omd][omd] for the preview and [Irmin][irmin] for the client-server storage. Omditor is offline-first meaning even without a connection you can use the application to edit your markdown and later use Irmin to sync and push your changes. Thanks to Irmin's mergeable and branchable structure we get a collaborative, offline-first web application almost for free.
+Omditor is an incredibly simple markdown editor that uses [Omd][omd] for the preview and [Irmin][irmin] for the client-server storage. Omditor is offline-first meaning even without a connection you can use the application to edit your markdown and later use Irmin to sync and push your changes (it isn't a [PWA](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) so this isn't quite true). Thanks to Irmin's mergeable and branchable structure we get a collaborative, offline-first web application almost for free.
 
-What follows is an explanation of this repository, bare in mind this is all proof-of-concept not some production service. This approach is largely based on the very awesome [Cuekeeper](https://github.com/talex5/cuekeeper).
+What follows is an explanation of this repository, bare in mind this is all proof-of-concept not some production service. It is a quick experiment and will likely remain that way. This approach is largely based on the very awesome [Cuekeeper](https://github.com/talex5/cuekeeper) so be sure to check that out.
+
 ## How it works?
 
 The client uses [Js_of_ocaml][jsoo] and [brr + note][brr] (my first foray into *functional reactive programming*). The server uses [cohttp][cohttp] and [crunches][crunch] the Javascript to be served. **Everything** uses [irmin][irmin]. The server holds the main store for the different markdown files (there are only three) and the clients push their changes once they're happy. Until then they are free to locally commit the changes and go and grab a coffee and go outside, knowing their content has been persistently saved to the browser's IndexedDB.
@@ -78,7 +79,7 @@ For the sake of making this PoC projeect simple and as short as possible, we're 
 
 #### Store
 
-The first thing we need is a git-store, backed by the browser's IndexedDB. With the right functor magic this is straight-forward enough. 
+The first thing we need is a git-store, backed by the browser's IndexedDB. With the right functor magic this is straight-forward enough. I encounter some issues with `irmin-indexeddb` (see [this repo for more details](https://github.com/patricoferris/irmin-http-repro)).
 
 <!-- $MDX file=src/client/store.ml,part=1 -->
 ```ocaml
@@ -193,7 +194,7 @@ The rest of the code is just for the UI and connecting up the different events, 
 
 This is a pretty fun approach to building web applications and feels quite powerful (see some of the extensions below). What's really exciting is the power of OCaml's portable code like [irmin][irmin] which started off life being for [MirageOS][mirage] but this approach to being in control of your implementation unlocks the ability to putting your code in lots of interesting places (laptops, browsers, phones, micro-controllers etc.!).
 
-If you made it this far thanks for reading. I through this together in just under a week so don't expect production-ready code or anything close to that. I encourage you to have a go with [irmin][irmin] though and see what you can build.
+If you made it this far thanks for reading. I threw this together in just under a week so don't expect production-ready code or anything close to that. I encourage you to have a go with [irmin][irmin] though and see what you can build and let people know about it!
 
 ### Extensions
 
