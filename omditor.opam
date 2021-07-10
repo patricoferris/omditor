@@ -16,8 +16,8 @@ depends: [
   "omd"
   "crunch"
   "cohttp-lwt-unix"
-  "cohttp-lwt-jsoo"
-  "irmin"
+  "cohttp-lwt-jsoo" {>= "4.0.0"}
+  "irmin" {>= "2.7.1"}
   "irmin-unix"
   "irmin-http"
   "irmin-indexeddb"

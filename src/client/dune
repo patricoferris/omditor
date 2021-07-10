@@ -9,7 +9,6 @@
   brr.note
   digestif.ocaml
   checkseum.ocaml
-  git-cohttp
   cohttp-lwt-jsoo
   unix
   irmin
