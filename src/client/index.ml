@@ -5,6 +5,7 @@ open Brr_note
 open Note
 open Js_of_ocaml_lwt [@@part "0"]
 
+[@@@part "0"]
 (* Model *)
 type t = { file : string; files : string list; editor : Jstr.t }
 
@@ -15,6 +16,7 @@ type action =
   | `Sync
   | `ChangeFile of string ]
 
+[@@@part "1"]
 (* Async update event -- are global events like this a bad idea? I 
    need something to trigger on async calls like to the Irmin store? *)
 let (refresh : action event), refresh_send = E.create ()
@@ -37,13 +39,14 @@ let commit s t =
   t
 
 let sync store t =
-  Lwt_js_events.async (fun () -> Lwt.map ignore @@ Store.sync store);
+  Lwt_js_events.async (fun () -> Lwt.map ignore @@ Store.sync ~merge:true store);
   t
 
 let push store t =
   Lwt_js_events.async (fun () -> Lwt.map ignore @@ Store.push store);
   t
 
+[@@@part "2"]
 let change_file store s t =
   let open Lwt.Infix in
   let f = { t with file = s } in
@@ -52,6 +55,7 @@ let change_file store s t =
       refresh_send (`Update (true, Jstr.v l)));
   f
 
+[@@@part "3"]
 let reducer (store : Store.t) (action : [> action ]) =
   match action with
   | `Update s -> update s
@@ -62,6 +66,7 @@ let reducer (store : Store.t) (action : [> action ]) =
   | `ChangeFile file -> fun t -> change_file store file (commit store t)
   | `UpdateEditable -> update_editable
 
+[@@@part "4"]
 (* Rendering *)
 let set_inner_html el s =
   let jv = El.to_jv el in
@@ -72,6 +77,11 @@ let editor_ui t =
   let (commit, commit_btn) : [> action ] event * El.t =
     let btn = Ui.Button.v (S.const [ El.txt' "Commit" ]) "commit" in
     let action = E.map (fun _ -> `LocalCommit) @@ Ui.Button.action btn in
+    (action, Ui.Button.el btn)
+  in
+  let (sync, sync_btn) : [> action ] event * El.t =
+    let btn = Ui.Button.v (S.const [ El.txt' "Sync" ]) "sync" in
+    let action = E.map (fun _ -> `Sync) @@ Ui.Button.action btn in
     (action, Ui.Button.el btn)
   in
   let (push, push_btn) : [> action ] event * El.t =
@@ -89,7 +99,7 @@ let editor_ui t =
     in
     (action, Ui.Value_selector.Menu.el sel)
   in
-  (E.select [ commit; file; push ], [ file_sel; commit_btn; push_btn ])
+  (E.select [ commit; file; sync; push ], [ file_sel; commit_btn; sync_btn; push_btn ])
 
 let editor t =
   match Document.find_el_by_id G.document @@ Jstr.v "editor" with
