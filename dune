@@ -1,3 +1,5 @@
 (mdx
  (package omditor)
  (files README.md))
+
+(vendored_dirs irmin irmin-indexeddb)

@@ -53,7 +53,7 @@ let sync ?(merge = true) t =
     Brr.Console.log [ Jstr.v "Merging" ];
     Store.merge_into ~info:(info "update staging") ~into:t.staging main >>= function
       | Ok () -> Lwt.return @@ Ok ()
-      | Error (`Conflict s) -> 
+      | Error (`Conflict _s) ->
         (* Of course in practice we'd be more clever here... *)
         Store.Head.get main >>= fun head -> 
         Lwt_result.ok @@ Store.Branch.set (Store.repo t.staging) "staging" head
